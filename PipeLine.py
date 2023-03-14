@@ -20,13 +20,16 @@ stack_name = "AB3Stack"
 
 # Zip all the files in the directory
 shutil.make_archive(output_zip_filename, 'zip', directoryToZip)
+print("ziped seccesfuly")
 
 
-# # Upload the zip file to S3
-# s3 = boto3.resource('s3')
-# bucket = s3.Bucket(bucket_name)
-# with open(output_zip_filename + ".zip", "rb") as f:
-#     bucket.upload_fileobj(f, output_zip_filename + ".zip")
+# Upload the zip file to S3
+s3 = boto3.resource('s3')
+bucket = s3.Bucket(bucket_name)
+with open(output_zip_filename + ".zip", "rb") as f:
+    bucket.upload_fileobj(f, "GetBaseCrypoDataLambda" + ".zip")
+
+print("uploaded to S3 seccesfuly")
 
 # # Update the CloudFormation stack with the new YAML template file
 # cloudformation = boto3.client('cloudformation')
