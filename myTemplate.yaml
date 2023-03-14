@@ -17,7 +17,7 @@ Resources:
       Code:
         S3Bucket: crypto-data-general
         S3Key: GetBaseCrypoDataLambda.zip
-      Handler: "code.xx"
+      Handler: "LambdaCode.handler"
       Runtime: "python3.8"
       Timeout: 30
       MemorySize: 128
