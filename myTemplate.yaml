@@ -16,7 +16,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: crypto-data-general
-        S3Key: Archive.zip
+        S3Key: GetBaseCrypoDataLambda.zip
       Handler: "code.xx"
       Runtime: "python3.8"
       Timeout: 30
