@@ -1,2 +1,2 @@
-GetBaseCryptoDataFolder/DemoFolder/*
-!GetBaseCryptoDataFolder/DemoFolder/DontIgnoreIt.json
+DemoFolder/*
+!DemoFolder/DontIgnoreIt.json
