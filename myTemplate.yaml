@@ -15,8 +15,8 @@ Resources:
     Type: "AWS::Lambda::Function"
     Properties:
       Code:
-        S3Bucket: crypto-data-general
-        S3Key: GetBaseCrypoDataLambda.zip
+        S3Bucket: crypto-data-f
+        S3Key: GetBaseCryptoDataFolder/GetBaseCrypoDataLambda.zip
       Handler: "LambdaCode.handler"
       Runtime: "python3.8"
       Timeout: 30
