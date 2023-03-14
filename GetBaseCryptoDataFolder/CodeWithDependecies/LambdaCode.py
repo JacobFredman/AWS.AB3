@@ -5,7 +5,7 @@ import json
 
 
 
-def xx(event, context):
+def handler(event, context):
     # API call
     response = requests.get('https://jsonplaceholder.typicode.com/todos/1')
     data = json.loads(response.text)

@@ -11,13 +11,13 @@ Resources:
           KeyType: "HASH"
       BillingMode: "PAY_PER_REQUEST"
   
-  MyLambdaFunction:
+  GetBaseCryptoDataFunction:
     Type: "AWS::Lambda::Function"
     Properties:
       Code:
-        S3Bucket: crypto-data-general
-        S3Key: Archive.zip
-      Handler: "code.xx"
+        S3Bucket: crypto-data-f
+        S3Key: GetBaseCrypoDataLambda.zip
+      Handler: "LambdaCode.handler"
       Runtime: "python3.8"
       Timeout: 30
       MemorySize: 128
@@ -44,9 +44,9 @@ Resources:
           PolicyName: "MyLambdaDynamoDBPolicy"
           
 Outputs:
-  MyLambdaFunctionArn:
-    Value: !GetAtt MyLambdaFunction.Arn
-    Description: "ARN of the Lambda function"
+  GetBaseCryptoDataFunctionArn:
+    Value: !GetAtt GetBaseCryptoDataFunction.Arn
+    Description: "ARN of the GetBaseCryptoData Lambda function"
     
   CryptoDBArn:
     Value: !GetAtt CryptoDB.Arn
