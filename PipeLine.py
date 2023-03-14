@@ -31,14 +31,29 @@ with open(output_zip_filename + ".zip", "rb") as f:
 
 print("uploaded to S3 seccesfuly")
 
-# # Update the CloudFormation stack with the new YAML template file
-# cloudformation = boto3.client('cloudformation')
-# with open("myTemplate.yaml", "r") as f:
-#     new_template_body = f.read()
-# cloudformation.update_stack(
-#     StackName=stack_name,
-#     TemplateBody=new_template_body
-# )
+# update the function with the new code
+# AB3Stack-GetBaseCryptoDataFunction-5gbo2r0w8ShS
+lambda_client = boto3.client('lambda')
+
+response = lambda_client.update_function_code(
+    FunctionName='AB3Stack-GetBaseCryptoDataFunction-5gbo2r0w8ShS',
+    S3Bucket=bucket_name,
+    S3Key='GetBaseCrypoDataLambda.zip'
+)
+print("Lambda updated")
+
+# Update the CloudFormation stack with the new YAML template file
+cloudformation = boto3.client('cloudformation')
+with open("myTemplate.yaml", "r") as f:
+    new_template_body = f.read()
+cloudformation.update_stack(
+    StackName=stack_name,
+    TemplateBody=new_template_body,
+    Capabilities=[
+        'CAPABILITY_IAM'
+    ]
+)
+print("updated stack seccefuly")
 
 # command line to run the python file:
 # /opt/homebrew/bin/python3 /Users/jfredmac/Desktop/Projects/AWS.AB3/pipeLine.py
