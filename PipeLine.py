@@ -34,3 +34,7 @@ cloudformation.update_stack(
     StackName=stack_name,
     TemplateBody=new_template_body
 )
+
+# command line to run the python file:
+# /opt/homebrew/bin/python3 /Users/jfredmac/Desktop/Projects/AWS.AB3/pipeLine.py
+
