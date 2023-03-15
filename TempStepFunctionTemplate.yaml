@@ -1,0 +1,98 @@
+Resources:
+  StateMachine:
+    Type: 'AWS::StepFunctions::StateMachine'
+    Properties:
+      DefinitionString:
+        !Sub |
+          {
+            "Comment": "A simple Step Function that orchestrates the execution of Lambda A, Lambda B, and Lambda C",
+            "StartAt": "LambdaA",
+            "States": {
+              "LambdaA": {
+                "Type": "Task",
+                "Resource": "<LAMBDA_A_ARN>",
+                "Next": "LambdaB",
+                "Catch": [
+                  {
+                    "ErrorEquals": ["States.ALL"],
+                    "Next": "LambdaAError"
+                  }
+                ]
+              },
+              "LambdaB": {
+                "Type": "Task",
+                "Resource": "<LAMBDA_B_ARN>",
+                "Next": "WaitForLambdaB",
+                "Catch": [
+                  {
+                    "ErrorEquals": ["States.ALL"],
+                    "Next": "LambdaBError"
+                  }
+                ]
+              },
+              "WaitForLambdaB": {
+                "Type": "Wait",
+                "Seconds": 10,
+                "Next": "LambdaC",
+                "Comment": "Wait for Lambda B to complete saving data in S3"
+              },
+              "LambdaC": {
+                "Type": "Task",
+                "Resource": "<LAMBDA_C_ARN>",
+                "Next": "LambdaCInsights",
+                "Catch": [
+                  {
+                    "ErrorEquals": ["States.ALL"],
+                    "Next": "LambdaCError"
+                  }
+                ]
+              },
+              "LambdaCInsights": {
+                "Type": "Task",
+                "Resource": "<CHAT_GPT_ARN>",
+                "Next": "LambdaCInsightsSave",
+                "Catch": [
+                  {
+                    "ErrorEquals": ["States.ALL"],
+                    "Next": "LambdaCInsightsError"
+                  }
+                ]
+              },
+              "LambdaCInsightsSave": {
+                "Type": "Task",
+                "Resource": "<LAMBDA_C_SAVE_ARN>",
+                "End": true,
+                "Catch": [
+                  {
+                    "ErrorEquals": ["States.ALL"],
+                    "Next": "LambdaCInsightsSaveError"
+                  }
+                ]
+              },
+              "LambdaAError": {
+                "Type": "Fail",
+                "Cause": "Lambda A failed",
+                "Error": "Lambda A error"
+              },
+              "LambdaBError": {
+                "Type": "Fail",
+                "Cause": "Lambda B failed",
+                "Error": "Lambda B error"
+              },
+              "LambdaCError": {
+                "Type": "Fail",
+                "Cause": "Lambda C failed",
+                "Error": "Lambda C error"
+              },
+              "LambdaCInsightsError": {
+                "Type": "Fail",
+                "Cause": "Lambda C Insights failed",
+                "Error": "Lambda C Insights error"
+              },
+              "LambdaCInsightsSaveError": {
+                "Type": "Fail",
+                "Cause": "Lambda C Insights Save failed",
+                "Error": "Lambda C Insights Save error"
+              }
+            }
+          }

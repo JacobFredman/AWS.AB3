@@ -1,0 +1,78 @@
+Resources:
+  LambdaAFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      # Add your Lambda A function properties here
+
+  LambdaBFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      # Add your Lambda B function properties here
+
+  LambdaCFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      # Add your Lambda C function properties here
+
+  StepFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: states.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: StepFunctionPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
+                Resource: '*'
+
+  MyStateMachine:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      DefinitionString:
+        !Sub |
+          {
+            "StartAt": "ParallelState",
+            "States": {
+              "ParallelState": {
+                "Type": "Parallel",
+                "Branches": [
+                  {
+                    "StartAt": "LambdaA",
+                    "States": {
+                      "LambdaA": {
+                        "Type": "Task",
+                        "Resource": "${LambdaAFunction.Arn}",
+                        "End": true
+                      }
+                    }
+                  },
+                  {
+                    "StartAt": "LambdaB",
+                    "States": {
+                      "LambdaB": {
+                        "Type": "Task",
+                        "Resource": "${LambdaBFunction.Arn}",
+                        "Next": "LambdaC"
+                      },
+                      "LambdaC": {
+                        "Type": "Task",
+                        "Resource": "${LambdaCFunction.Arn}",
+                        "End": true
+                      }
+                    }
+                  }
+                ],
+                "End": true
+              }
+            }
+          }
+      RoleArn: !GetAtt [StepFunctionRole, Arn]
